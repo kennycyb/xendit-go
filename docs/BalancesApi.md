@@ -4,23 +4,57 @@ All URIs are relative to *https://api.xendit.co*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**BalanceGet**](BalancesApi.md#BalanceGet) | **Get** /balance | 
+[**GetBalance**](BalancesApi.md#GetBalance) | **Get** /balance | 
 
 
 
-## BalanceGet
+## GetBalance
 
-> Balance BalanceGet(ctx, accountType)
+> Balance GetBalance(ctx).AccountType(accountType).ForUserID(forUserID).Execute()
 
 
 
-### Required Parameters
+### Example
+
+```go
+package main
+
+import (
+    "context"
+    "fmt"
+    "os"
+    openapiclient "github.com/kennycyb/xendit-go"
+)
+
+func main() {
+    accountType := "accountType_example" // string | Account Type
+    forUserID := "forUserID_example" // string | For User ID (optional)
+
+    configuration := openapiclient.NewConfiguration()
+    apiClient := openapiclient.NewAPIClient(configuration)
+    resp, r, err := apiClient.BalancesApi.GetBalance(context.Background()).AccountType(accountType).ForUserID(forUserID).Execute()
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "Error when calling `BalancesApi.GetBalance``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
+    }
+    // response from `GetBalance`: Balance
+    fmt.Fprintf(os.Stdout, "Response from `BalancesApi.GetBalance`: %v\n", resp)
+}
+```
+
+### Path Parameters
+
+
+
+### Other Parameters
+
+Other parameters are passed through a pointer to a apiGetBalanceRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
-**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
-**accountType** | [**string**](.md)| Account Type | 
+ **accountType** | **string** | Account Type | 
+ **forUserID** | **string** | For User ID | 
 
 ### Return type
 

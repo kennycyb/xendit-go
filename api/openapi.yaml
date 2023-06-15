@@ -5,19 +5,33 @@ info:
 servers:
 - description: Xendit API
   url: https://api.xendit.co
+- description: Xendit API Staging
+  url: https://api.stg.tidnex.dev
 security:
 - basicAuth: []
 paths:
   /balance:
     get:
+      operationId: getBalance
       parameters:
+      - description: For User ID
+        explode: false
+        in: header
+        name: for-user-id
+        required: false
+        schema:
+          type: string
+        style: simple
       - description: Account Type
         explode: true
         in: query
         name: account_type
         required: true
         schema:
-          format: uuid
+          enum:
+          - CASH
+          - HOLDING
+          - TAX
           type: string
         style: form
       responses:
