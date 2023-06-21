@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## GetBalance
 
-> Balance GetBalance(ctx).AccountType(accountType).ForUserID(forUserID).Execute()
+> Balance GetBalance(ctx).AccountType(accountType).ForUserID(forUserID).IdempotencyKey(idempotencyKey).Execute()
 
 
 
@@ -29,10 +29,11 @@ import (
 func main() {
     accountType := "accountType_example" // string | Account Type
     forUserID := "forUserID_example" // string | For User ID (optional)
+    idempotencyKey :=  // string | Idempotency Key (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BalancesApi.GetBalance(context.Background()).AccountType(accountType).ForUserID(forUserID).Execute()
+    resp, r, err := apiClient.BalancesApi.GetBalance(context.Background()).AccountType(accountType).ForUserID(forUserID).IdempotencyKey(idempotencyKey).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `BalancesApi.GetBalance``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -55,6 +56,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **accountType** | **string** | Account Type | 
  **forUserID** | **string** | For User ID | 
+ **idempotencyKey** | **string** | Idempotency Key | 
 
 ### Return type
 

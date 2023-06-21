@@ -27,6 +27,7 @@ type ApiGetBalanceRequest struct {
 	ApiService *BalancesApiService
 	accountType *string
 	forUserID *string
+	idempotencyKey *string
 }
 
 // Account Type
@@ -38,6 +39,12 @@ func (r ApiGetBalanceRequest) AccountType(accountType string) ApiGetBalanceReque
 // For User ID
 func (r ApiGetBalanceRequest) ForUserID(forUserID string) ApiGetBalanceRequest {
 	r.forUserID = &forUserID
+	return r
+}
+
+// Idempotency Key
+func (r ApiGetBalanceRequest) IdempotencyKey(idempotencyKey string) ApiGetBalanceRequest {
+	r.idempotencyKey = &idempotencyKey
 	return r
 }
 
@@ -102,6 +109,9 @@ func (a *BalancesApiService) GetBalanceExecute(r ApiGetBalanceRequest) (*Balance
 	}
 	if r.forUserID != nil {
 		parameterAddToHeaderOrQuery(localVarHeaderParams, "for-user-id", r.forUserID, "")
+	}
+	if r.idempotencyKey != nil {
+		parameterAddToHeaderOrQuery(localVarHeaderParams, "x-idempotency-key", r.idempotencyKey, "")
 	}
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
