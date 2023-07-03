@@ -1,18 +1,18 @@
-# \BalancesApi
+# \CustomersApi
 
 All URIs are relative to *https://api.xendit.co*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**GetBalance**](BalancesApi.md#GetBalance) | **Get** /balance | Get Balance
+[**GetCustomer**](CustomersApi.md#GetCustomer) | **Get** /customers/{id} | Get Customer
 
 
 
-## GetBalance
+## GetCustomer
 
-> Balance GetBalance(ctx).AccountType(accountType).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
+> Customer GetCustomer(ctx, id).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
 
-Get Balance
+Get Customer
 
 
 
@@ -29,40 +29,44 @@ import (
 )
 
 func main() {
-    accountType := "accountType_example" // string | Account Type
+    id := "id_example" // string | Xendit-generated Customer ID.  Will start with cust-...
     forUserId := "forUserId_example" // string | For User ID (optional)
     xIdempotencyKey := "xIdempotencyKey_example" // string | Idempotency Key (optional)
 
     configuration := openapiclient.NewConfiguration()
     apiClient := openapiclient.NewAPIClient(configuration)
-    resp, r, err := apiClient.BalancesApi.GetBalance(context.Background()).AccountType(accountType).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
+    resp, r, err := apiClient.CustomersApi.GetCustomer(context.Background(), id).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
     if err != nil {
-        fmt.Fprintf(os.Stderr, "Error when calling `BalancesApi.GetBalance``: %v\n", err)
+        fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetCustomer``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
     }
-    // response from `GetBalance`: Balance
-    fmt.Fprintf(os.Stdout, "Response from `BalancesApi.GetBalance`: %v\n", resp)
+    // response from `GetCustomer`: Customer
+    fmt.Fprintf(os.Stdout, "Response from `CustomersApi.GetCustomer`: %v\n", resp)
 }
 ```
 
 ### Path Parameters
 
 
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+**ctx** | **context.Context** | context for authentication, logging, cancellation, deadlines, tracing, etc.
+**id** | **string** | Xendit-generated Customer ID.  Will start with cust-... | 
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiGetBalanceRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiGetCustomerRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **accountType** | **string** | Account Type | 
+
  **forUserId** | **string** | For User ID | 
  **xIdempotencyKey** | **string** | Idempotency Key | 
 
 ### Return type
 
-[**Balance**](Balance.md)
+[**Customer**](Customer.md)
 
 ### Authorization
 

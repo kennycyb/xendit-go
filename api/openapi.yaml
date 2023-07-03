@@ -1,5 +1,6 @@
 openapi: 3.0.0
 info:
+  description: Customer API description
   title: Xendit API
   version: 2.0.0
 servers:
@@ -10,9 +11,10 @@ servers:
 security:
 - basicAuth: []
 paths:
-  /balance:
+  /customers/{id}:
     get:
-      operationId: getBalance
+      description: Retrieves a single customer object
+      operationId: getCustomer
       parameters:
       - description: For User ID
         explode: false
@@ -22,37 +24,196 @@ paths:
         schema:
           type: string
         style: simple
-      - description: Account Type
-        explode: true
-        in: query
-        name: account_type
+      - description: Xendit-generated Customer ID.  Will start with cust-...
+        explode: false
+        in: path
+        name: id
         required: true
         schema:
-          enum:
-          - CASH
-          - HOLDING
-          - TAX
           type: string
-        style: form
+        style: simple
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Balance'
+                $ref: '#/components/schemas/Customer'
           description: success
       security:
       - basicAuth: []
+      summary: Get Customer
       tags:
-      - balances
+      - customers
 components:
   schemas:
-    Balance:
+    IndividualDetails:
       example:
-        balance: 0.8008281904610115
+        place_of_birth: place_of_birth
+        nationality: nationality
+        gender: gender
+        surname: surname
+        date_of_birth: date_of_birth
+        employment: employment
+        given_names: given_names
       properties:
-        balance:
-          type: number
+        given_names:
+          type: string
+        surname:
+          type: string
+        nationality:
+          type: string
+        place_of_birth:
+          type: string
+        date_of_birth:
+          type: string
+        gender:
+          type: string
+        employment:
+          type: string
+      type: object
+    CustomerData:
+      example:
+        addresses:
+        - "{}"
+        - "{}"
+        metadata: "{}"
+        reference_id: reference_id
+        kyc_documents:
+        - "{}"
+        - "{}"
+        created: created
+        description: description
+        type: type
+        hashed_phone_number: hashed_phone_number
+        business_details: business_details
+        individual_details:
+          place_of_birth: place_of_birth
+          nationality: nationality
+          gender: gender
+          surname: surname
+          date_of_birth: date_of_birth
+          employment: employment
+          given_names: given_names
+        phone_number: phone_number
+        id: id
+        mobile_number: mobile_number
+        identity_accounts:
+        - "{}"
+        - "{}"
+        updated: updated
+        email: email
+      properties:
+        id:
+          type: string
+        reference_id:
+          type: string
+        type:
+          type: string
+        individual_details:
+          $ref: '#/components/schemas/IndividualDetails'
+        business_details:
+          type: string
+        email:
+          type: string
+        mobile_number:
+          type: string
+        phone_number:
+          type: string
+        hashed_phone_number:
+          type: string
+        addresses:
+          items:
+            type: object
+          type: array
+        identity_accounts:
+          items:
+            type: object
+          type: array
+        kyc_documents:
+          items:
+            type: object
+          type: array
+        description:
+          type: string
+        metadata:
+          type: object
+        created:
+          type: string
+        updated:
+          type: string
+      type: object
+    Customer:
+      example:
+        data:
+        - addresses:
+          - "{}"
+          - "{}"
+          metadata: "{}"
+          reference_id: reference_id
+          kyc_documents:
+          - "{}"
+          - "{}"
+          created: created
+          description: description
+          type: type
+          hashed_phone_number: hashed_phone_number
+          business_details: business_details
+          individual_details:
+            place_of_birth: place_of_birth
+            nationality: nationality
+            gender: gender
+            surname: surname
+            date_of_birth: date_of_birth
+            employment: employment
+            given_names: given_names
+          phone_number: phone_number
+          id: id
+          mobile_number: mobile_number
+          identity_accounts:
+          - "{}"
+          - "{}"
+          updated: updated
+          email: email
+        - addresses:
+          - "{}"
+          - "{}"
+          metadata: "{}"
+          reference_id: reference_id
+          kyc_documents:
+          - "{}"
+          - "{}"
+          created: created
+          description: description
+          type: type
+          hashed_phone_number: hashed_phone_number
+          business_details: business_details
+          individual_details:
+            place_of_birth: place_of_birth
+            nationality: nationality
+            gender: gender
+            surname: surname
+            date_of_birth: date_of_birth
+            employment: employment
+            given_names: given_names
+          phone_number: phone_number
+          id: id
+          mobile_number: mobile_number
+          identity_accounts:
+          - "{}"
+          - "{}"
+          updated: updated
+          email: email
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/CustomerData'
+          type: array
       type: object
   securitySchemes:
     basicAuth:

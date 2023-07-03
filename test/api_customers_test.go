@@ -1,7 +1,7 @@
 /*
 Xendit API
 
-Testing BalancesApiService
+Testing CustomersApiService
 
 */
 
@@ -19,16 +19,18 @@ import (
 	client "github.com/kennycyb/xendit-go/client"
 )
 
-func Test_xendit_BalancesApiService(t *testing.T) {
+func Test_xendit_CustomersApiService(t *testing.T) {
 
 	config := xendit.NewConfiguration()
 	apiClient := client.NewAPIClient(config)
 
-	t.Run("Test BalancesApiService GetBalance", func(t *testing.T) {
+	t.Run("Test CustomersApiService GetCustomer", func(t *testing.T) {
 
 		t.Skip("skip test")  // remove to run test
 
-		resp, httpRes, err := apiClient.BalancesApi.GetBalance(context.Background()).Execute()
+		var id string
+
+		resp, httpRes, err := apiClient.CustomersApi.GetCustomer(context.Background(), id).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
