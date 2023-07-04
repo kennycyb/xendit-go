@@ -16,17 +16,16 @@ import (
 	"testing"
 
 	xendit "github.com/kennycyb/xendit-go"
-	client "github.com/kennycyb/xendit-go/client"
 )
 
 func Test_xendit_BalancesApiService(t *testing.T) {
 
 	config := xendit.NewConfiguration()
-	apiClient := client.NewAPIClient(config)
+	apiClient := xendit.NewAPIClient(config)
 
 	t.Run("Test BalancesApiService GetBalance", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.BalancesApi.GetBalance(context.Background()).Execute()
 

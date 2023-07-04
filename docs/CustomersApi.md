@@ -25,7 +25,8 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "github.com/kennycyb/xendit-go"
+    xendit "github.com/kennycyb/xendit-go"
+    client "github.com/kennycyb/xendit-go/client"
 )
 
 func main() {
@@ -33,8 +34,8 @@ func main() {
     forUserId := "forUserId_example" // string | For User ID (optional)
     xIdempotencyKey := "xIdempotencyKey_example" // string | Idempotency Key (optional)
 
-    configuration := openapiclient.NewConfiguration()
-    apiClient := openapiclient.NewAPIClient(configuration)
+    configuration := xendit.NewConfiguration()
+    apiClient := client.NewAPIClient(configuration)
     resp, r, err := apiClient.CustomersApi.GetCustomer(context.Background(), id).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetCustomer``: %v\n", err)

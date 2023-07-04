@@ -16,17 +16,16 @@ import (
 	"testing"
 
 	xendit "github.com/kennycyb/xendit-go"
-	client "github.com/kennycyb/xendit-go/client"
 )
 
 func Test_xendit_CustomersApiService(t *testing.T) {
 
 	config := xendit.NewConfiguration()
-	apiClient := client.NewAPIClient(config)
+	apiClient := xendit.NewAPIClient(config)
 
 	t.Run("Test CustomersApiService GetCustomer", func(t *testing.T) {
 
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var id string
 
