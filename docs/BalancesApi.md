@@ -1,4 +1,4 @@
-# \BalancesApi
+# xendit\BalancesApi
 
 All URIs are relative to *https://api.xendit.co*
 

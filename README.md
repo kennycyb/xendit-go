@@ -34,12 +34,19 @@ os.Setenv("HTTP_PROXY", "http://proxy_name:proxy_port")
 The SDK needs to be instantiated using your secret API key obtained from the [Xendit Dashboard](https://dashboard.xendit.co/settings/developers#api-keys).
 You can sign up for a free Dashboard account [here](https://dashboard.xendit.co/register).
 
+```golang
+ctx := context.Background()
+
+xnd := xendit.NewClient("API-KEY")
+balance, _, err := xnd.BalancesApi.GetBalance(ctx).AccountType("CASH").Execute()
+```
+
 # Documentation
 
 Find detailed API infomration and examples for each of our product's by clicking the links below,
 
-* [Customer](docs/CustomersApi.md)
 * [Balance](docs/BalancesApi.md)
+* [Customer](docs/CustomersApi.md)
 
 All URIs are relative to *https://api.xendit.co*.  For more information about our API, please refer to *https://developers.xendit.co/*.
 

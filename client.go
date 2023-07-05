@@ -33,8 +33,8 @@ import (
 	
 	common "github.com/kennycyb/xendit-go/common"
 	
-	customer "github.com/kennycyb/xendit-go/customer"
 	balance "github.com/kennycyb/xendit-go/balance"
+	customer "github.com/kennycyb/xendit-go/customer"
 
 )
 
@@ -52,8 +52,8 @@ type APIClient struct {
 	apiKey string
 
 	// API Services
-	CustomersApi customer.CustomersApi
 	BalancesApi balance.BalancesApi
+	CustomersApi customer.CustomersApi
 }
 
 type service struct {
@@ -70,8 +70,8 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c := &APIClient{}
 	c.cfg = cfg
 	
-	c.CustomersApi = customer.NewCustomersApi(c)
 	c.BalancesApi = balance.NewBalancesApi(c)
+	c.CustomersApi = customer.NewCustomersApi(c)
 
 	return c
 }
@@ -89,8 +89,8 @@ func NewClient(apiKey string) *APIClient {
 	c.cfg = cfg
 	c.apiKey = apiKey
 	
-	c.CustomersApi = customer.NewCustomersApi(c)
 	c.BalancesApi = balance.NewBalancesApi(c)
+	c.CustomersApi = customer.NewCustomersApi(c)
 
 	return c
 }

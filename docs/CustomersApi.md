@@ -1,4 +1,4 @@
-# \CustomersApi
+# xendit\CustomersApi
 
 All URIs are relative to *https://api.xendit.co*
 
