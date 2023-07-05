@@ -1,7 +1,6 @@
 .gitignore
 .travis.yml
 README.md
-api/openapi.yaml
 balance/api_balances.go
 balance/model_balance.go
 client.go
@@ -9,11 +8,13 @@ common/common.go
 configuration.go
 docs/Balance.md
 docs/BalancesApi.md
+docs/balance.yaml
 docs/header.jpg
 git_push.sh
 go.mod
 go.sum
 response.go
+test/api_balances_test.go
 utils/helpers.go
 utils/utils.go
 xendit.go

@@ -1,7 +1,7 @@
 /*
 Xendit API
 
-Customer API description
+Balance API description
 
 API version: 2.0.0
 */
@@ -227,3 +227,4 @@ func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint strin
 func reportError(format string, a ...interface{}) error {
 	return fmt.Errorf(format, a...)
 }
+

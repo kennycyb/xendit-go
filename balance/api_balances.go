@@ -161,13 +161,13 @@ func (a *BalancesApiService) GetBalanceExecute(r ApiGetBalanceRequest) (*Balance
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
-		newErr := utils.NewGenericOpenAPIError(localVarBody, localVarHTTPResponse.Status, nil)
+		newErr := common.NewGenericOpenAPIError(localVarBody, localVarHTTPResponse.Status, nil)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
 	err = a.client.Decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 	if err != nil {
-		newErr := utils.NewGenericOpenAPIError(localVarBody, err.Error(), nil)
+		newErr := common.NewGenericOpenAPIError(localVarBody, err.Error(), nil)
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 

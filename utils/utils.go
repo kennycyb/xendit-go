@@ -1,7 +1,7 @@
 /*
 Xendit API
 
-Balance API description
+Customer API description
 
 API version: 2.0.0
 */

@@ -30,7 +30,7 @@ import (
 )
 
 func main() {
-    accountType := "accountType_example" // string | Account Type
+    accountType := "CASH" // string | Account Type
     forUserId := "forUserId_example" // string | For User ID (optional)
     xIdempotencyKey := "xIdempotencyKey_example" // string | Idempotency Key (optional)
 

@@ -1,7 +1,7 @@
 /*
 Xendit API
 
-Balance API description
+Customer API description
 
 API version: 2.0.0
 */
@@ -49,6 +49,7 @@ var (
 // In most cases there should be only one, shared, APIClient.
 type APIClient struct {
 	cfg    *Configuration
+	apiKey string
 
 	// API Services
 	CustomersApi customer.CustomersApi
@@ -68,6 +69,25 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 
 	c := &APIClient{}
 	c.cfg = cfg
+	
+	c.CustomersApi = customer.NewCustomersApi(c)
+	c.BalancesApi = balance.NewBalancesApi(c)
+
+	return c
+}
+
+// NewClient creates a new Xendit SDK Client.  The SDK needs to be instantiated using your
+// secret API key obtained from the https://dashboard.xendit.co/settings/developers#api-keys.
+// You can sign up for a free Dashboard account from https://dashboard.xendit.co/register.
+func NewClient(apiKey string) *APIClient {
+	cfg := NewConfiguration()
+	if cfg.HTTPClient == nil {
+		cfg.HTTPClient = http.DefaultClient
+	}
+	
+	c := &APIClient{}
+	c.cfg = cfg
+	c.apiKey = apiKey
 	
 	c.CustomersApi = customer.NewCustomersApi(c)
 	c.BalancesApi = balance.NewBalancesApi(c)
@@ -275,6 +295,10 @@ func (c *APIClient) PrepareRequest(
 		// Basic HTTP Authentication
 		if auth, ok := ctx.Value(ContextBasicAuth).(BasicAuth); ok {
 			localVarRequest.SetBasicAuth(auth.UserName, auth.Password)
+		} else {
+			if c.apiKey != "" {
+				localVarRequest.SetBasicAuth(c.apiKey, "")
+			}
 		}
 
 	}
@@ -496,4 +520,3 @@ func formatErrorMessage(status string, v interface{}) string {
 
 	return strings.TrimSpace(fmt.Sprintf("%s %s", status, str))
 }
-
