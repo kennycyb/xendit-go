@@ -26,7 +26,6 @@ import (
     "fmt"
     "os"
     xendit "github.com/kennycyb/xendit-go"
-    client "github.com/kennycyb/xendit-go/client"
 )
 
 func main() {
@@ -34,9 +33,9 @@ func main() {
     forUserId := "forUserId_example" // string | For User ID (optional)
     xIdempotencyKey := "xIdempotencyKey_example" // string | Idempotency Key (optional)
 
-    configuration := xendit.NewConfiguration()
-    apiClient := client.NewAPIClient(configuration)
-    resp, r, err := apiClient.BalancesApi.GetBalance(context.Background()).AccountType(accountType).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
+    xnd := xendit.NewClient("API-KEY")
+
+    resp, r, err := xnd.BalancesApi.GetBalance(context.Background()).AccountType(accountType).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `BalancesApi.GetBalance``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)

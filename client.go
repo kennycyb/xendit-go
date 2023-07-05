@@ -1,7 +1,7 @@
 /*
 Xendit API
 
-Customer API description
+Balance API description
 
 API version: 2.0.0
 */
@@ -520,3 +520,4 @@ func formatErrorMessage(status string, v interface{}) string {
 
 	return strings.TrimSpace(fmt.Sprintf("%s %s", status, str))
 }
+
