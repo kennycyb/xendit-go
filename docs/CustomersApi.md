@@ -35,7 +35,7 @@ func main() {
 
     xnd := xendit.NewClient("API-KEY")
 
-    resp, r, err := xnd.CustomersApi.GetCustomer(context.Background(), id).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
+    resp, r, err := xnd.CustomersApi.GetCustomer(context.Background(), id).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `CustomersApi.GetCustomer``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)

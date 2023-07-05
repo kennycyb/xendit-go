@@ -35,7 +35,7 @@ func main() {
 
     xnd := xendit.NewClient("API-KEY")
 
-    resp, r, err := xnd.BalancesApi.GetBalance(context.Background()).AccountType(accountType).ForUserId(forUserId).XIdempotencyKey(xIdempotencyKey).Execute()
+    resp, r, err := xnd.BalancesApi.GetBalance(context.Background()).AccountType(accountType).Execute()
     if err != nil {
         fmt.Fprintf(os.Stderr, "Error when calling `BalancesApi.GetBalance``: %v\n", err)
         fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
