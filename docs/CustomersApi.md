@@ -29,9 +29,10 @@ import (
 )
 
 func main() {
+    
     id := "id_example" // string | Xendit-generated Customer ID.  Will start with cust-...
-    forUserId := "forUserId_example" // string | For User ID (optional)
-    xIdempotencyKey := "xIdempotencyKey_example" // string | Idempotency Key (optional)
+
+
 
     xnd := xendit.NewClient("API-KEY")
 
