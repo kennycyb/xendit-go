@@ -4,10 +4,10 @@ info:
   title: Xendit API
   version: 2.0.0
 servers:
-- description: Xendit API
+- description: Xendit API Server
   url: https://api.xendit.co
-- description: Xendit API Staging
-  url: https://api.stg.tidnex.dev
+- description: Xendit API Staging Server
+  url: https://api-staging.xendit.co
 security:
 - basicAuth: []
 paths:

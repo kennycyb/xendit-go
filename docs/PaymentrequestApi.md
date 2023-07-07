@@ -1,6 +1,6 @@
 # xendit\PaymentrequestApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *https://api.xendit.co*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

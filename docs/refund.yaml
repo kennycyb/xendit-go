@@ -4,7 +4,10 @@ info:
   title: Refund Service
   version: 1.0.7
 servers:
-- url: /
+- description: Xendit API Server
+  url: https://api.xendit.co
+- description: Xendit API Staging Server
+  url: https://api-staging.xendit.co
 paths:
   /refunds:
     post:

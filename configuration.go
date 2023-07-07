@@ -83,8 +83,12 @@ func NewConfiguration() *Configuration {
 		Debug:            false,
 		Servers:          ServerConfigurations{
 			{
-				URL: "",
-				Description: "No description provided",
+				URL: "https://api.xendit.co",
+				Description: "Xendit API Server",
+			},
+			{
+				URL: "https://api-staging.xendit.co",
+				Description: "Xendit API Staging Server",
 			},
 		},
 		OperationServers: map[string]ServerConfigurations{
