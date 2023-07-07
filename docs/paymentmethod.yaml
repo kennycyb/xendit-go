@@ -1,0 +1,2944 @@
+openapi: 3.0.0
+info:
+  description: This API is used for Payment Method Service v2
+  title: Payment Method Service v2
+  version: 2.79.0
+servers:
+- url: /
+paths:
+  /v2/payment_methods:
+    get:
+      description: Get all payment methods by filters
+      operationId: getAllPaymentMethods
+      parameters:
+      - explode: true
+        in: query
+        name: id
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: type
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          items:
+            $ref: '#/components/schemas/PaymentMethodStatus'
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: reusability
+        required: false
+        schema:
+          $ref: '#/components/schemas/PaymentMethodReusability'
+        style: form
+      - explode: true
+        in: query
+        name: customer_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: reference_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: after_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: before_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          minimum: 1
+          type: integer
+        style: form
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPaymentMethodList'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+          description: Data not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Get all payment methods by filters
+      tags:
+      - paymentmethod
+    post:
+      description: This endpoint initiates creation of payment method
+      operationId: createPaymentMethod
+      parameters:
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicCreatePaymentMethod'
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPaymentMethod'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+          description: Data not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createPaymentMethod_409_response'
+          description: Request causes conflict
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createPaymentMethod_503_response'
+          description: Service is unavailable due to dependencies
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Creates payment method
+      tags:
+      - paymentmethod
+  /v2/payment_methods/{paymentMethodId}:
+    get:
+      description: Get payment method by ID
+      operationId: getPaymentMethodByID
+      parameters:
+      - explode: false
+        in: path
+        name: paymentMethodId
+        required: true
+        schema:
+          example: pm-1fdaf346-dd2e-4b6c-b938-124c7167a822
+          type: string
+        style: simple
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPaymentMethod'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+          description: Data not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Get payment method by ID
+      tags:
+      - paymentmethod
+    patch:
+      description: This endpoint is used to toggle the ```status``` of an e-Wallet
+        or a Direct Debit payment method to ```ACTIVE``` or ```INACTIVE```.  This
+        is also used to update the details of an Over-the-Counter or a Virtual Account
+        payment method.
+      operationId: patchPaymentMethods
+      parameters:
+      - explode: false
+        in: path
+        name: paymentMethodId
+        required: true
+        schema:
+          example: pm-1fdaf346-dd2e-4b6c-b938-124c7167a822
+          type: string
+        style: simple
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicPatchPaymentMethod'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPaymentMethod'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+          description: Data not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Patch payment methods
+      tags:
+      - paymentmethod
+  /v2/payment_methods/{paymentMethodId}/expire:
+    post:
+      description: This endpoint expires a payment method and performs unlinking if
+        necessary
+      operationId: expirePaymentMethod
+      parameters:
+      - explode: false
+        in: path
+        name: paymentMethodId
+        required: true
+        schema:
+          example: pm-1fdaf346-dd2e-4b6c-b938-124c7167a822
+          type: string
+        style: simple
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicExpirePaymentMethod'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPaymentMethod'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+          description: Data not found
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createPaymentMethod_503_response'
+          description: Service is unavailable due to dependencies
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Expires a payment method
+      tags:
+      - paymentmethod
+  /v2/payment_methods/{paymentMethodId}/auth:
+    post:
+      description: This endpoint validates a payment method linking OTP
+      operationId: authPaymentMethod
+      parameters:
+      - explode: false
+        in: path
+        name: paymentMethodId
+        required: true
+        schema:
+          example: pm-1fdaf346-dd2e-4b6c-b938-124c7167a822
+          type: string
+        style: simple
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicAuthPaymentMethod'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPaymentMethod'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+          description: Data not found
+        "409":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createPaymentMethod_409_response'
+          description: Request causes conflict
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createPaymentMethod_503_response'
+          description: Service is unavailable due to dependencies
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Validate a payment method's linking OTP
+      tags:
+      - paymentmethod
+  /v2/payment_methods/{paymentMethodId}/payments:
+    get:
+      description: Returns payments with matching PaymentMethodID.
+      operationId: publicGetPaymentsByPaymentMethodId
+      parameters:
+      - explode: false
+        in: path
+        name: paymentMethodId
+        required: true
+        schema:
+          example: pm-1fdaf346-dd2e-4b6c-b938-124c7167a822
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: payment_request_id
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: payment_method_id
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: reference_id
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: payment_method_type
+        required: false
+        schema:
+          items:
+            $ref: '#/components/schemas/PaymentMethodType'
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: channel_code
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: status
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: currency
+        required: false
+        schema:
+          items:
+            type: string
+          type: array
+        style: form
+      - explode: true
+        in: query
+        name: "created[gte]"
+        required: false
+        schema:
+          $ref: '#/components/schemas/Datetime'
+        style: form
+      - explode: true
+        in: query
+        name: "created[lte]"
+        required: false
+        schema:
+          $ref: '#/components/schemas/Datetime'
+        style: form
+      - explode: true
+        in: query
+        name: "updated[gte]"
+        required: false
+        schema:
+          $ref: '#/components/schemas/Datetime'
+        style: form
+      - explode: true
+        in: query
+        name: "updated[lte]"
+        required: false
+        schema:
+          $ref: '#/components/schemas/Datetime'
+        style: form
+      - explode: true
+        in: query
+        name: limit
+        required: false
+        schema:
+          type: integer
+        style: form
+      - explode: true
+        in: query
+        name: after_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - explode: true
+        in: query
+        name: before_id
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+          description: Data not found
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createPaymentMethod_503_response'
+          description: Service is unavailable due to dependencies
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Returns payments with matching PaymentMethodID.
+      tags:
+      - paymentmethod
+  /v2/payment_methods/channels:
+    get:
+      description: Get all payment channels
+      operationId: getAllPaymentChannels
+      parameters:
+      - explode: true
+        in: query
+        name: is_activated
+        required: false
+        schema:
+          default: true
+          enum:
+          - true
+          - false
+          type: boolean
+        style: form
+      - explode: true
+        in: query
+        name: type
+        required: false
+        schema:
+          example: DIRECT_DEBIT
+          type: string
+        style: form
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPaymentChannelList'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Get all payment channels
+      tags:
+      - paymentmethod
+  /v2/payment_methods/channels/simulate_health:
+    post:
+      description: Simulate payment channel health to a given business id.
+      operationId: publicSimulatePaymentChannelHealth
+      parameters:
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicPostSimulatePaymentChannelHealth'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicSimulatePaymentChannelHealth'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Simulate payment channel health to a given business id.
+      tags:
+      - paymentmethod
+  /v2/payment_methods/{paymentMethodId}/payments/simulate:
+    post:
+      description: Makes payment with matching PaymentMethodID.
+      operationId: publicSimulatePaymentByPaymentMethodId
+      parameters:
+      - explode: false
+        in: path
+        name: paymentMethodId
+        required: true
+        schema:
+          example: pm-1fdaf346-dd2e-4b6c-b938-124c7167a822
+          type: string
+        style: simple
+      - description: Idempotency Key
+        in: header
+        name: x-idempotency-key
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/publicSimulatePaymentByPaymentMethodId_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicSimulatePayment'
+          description: Request successful
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+          description: Bad request
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+          description: Forbidden due to permissions
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+          description: Data not found
+        "503":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/createPaymentMethod_503_response'
+          description: Service is unavailable due to dependencies
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+          description: Internal server error
+      summary: Makes payment with matching PaymentMethodID.
+      tags:
+      - paymentmethod
+components:
+  parameters:
+    PaymentMethodID:
+      explode: false
+      in: path
+      name: paymentMethodId
+      required: true
+      schema:
+        example: pm-1fdaf346-dd2e-4b6c-b938-124c7167a822
+        type: string
+      style: simple
+    VirtualAccountID:
+      explode: false
+      in: path
+      name: virtualAccountId
+      required: true
+      schema:
+        example: 1fdaf346-dd2e-4b6c-b938-124c7167a822
+        type: string
+      style: simple
+  responses:
+    HealthcheckError:
+      description: "Service is unavailable - at least one dependecy, such as db/redis,\
+        \ not available"
+    InternalServerError:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/getAllPaymentMethods_default_response'
+      description: Internal server error
+    StatusBadRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/getAllPaymentMethods_400_response'
+      description: Bad request
+    StatusForbidden:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/getAllPaymentMethods_403_response'
+      description: Forbidden due to permissions
+    StatusNotFound:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/getAllPaymentMethods_404_response'
+      description: Data not found
+    StatusConflict:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/createPaymentMethod_409_response'
+      description: Request causes conflict
+    StatusServiceUnavailable:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/createPaymentMethod_503_response'
+      description: Service is unavailable due to dependencies
+  schemas:
+    PaymentMethodType:
+      enum:
+      - CARD
+      - CRYPTOCURRENCY
+      - DIRECT_BANK_TRANSFER
+      - DIRECT_DEBIT
+      - EWALLET
+      - OVER_THE_COUNTER
+      - QR_CODE
+      - VIRTUAL_ACCOUNT
+      type: string
+    PaymentMethodCountry:
+      enum:
+      - PH
+      - ID
+      - VN
+      - TH
+      - MY
+      type: string
+    PaymentMethodStatus:
+      enum:
+      - ACTIVE
+      - EXPIRED
+      - INACTIVE
+      - PENDING
+      - REQUIRES_ACTION
+      - FAILED
+      type: string
+    PaymentMethodReusability:
+      enum:
+      - MULTIPLE_USE
+      - ONE_TIME_USE
+      type: string
+    EwalletChannelCode:
+      description: Ewallet Channel Code
+      enum:
+      - GCASH
+      - GRABPAY
+      - PAYMAYA
+      - OVO
+      - DANA
+      - LINKAJA
+      - SHOPEEPAY
+      - SAKUKU
+      - NEXCASH
+      - ASTRAPAY
+      - JENIUSPAY
+      - APPOTA
+      - MOMO
+      - VNPTWALLET
+      - VIETTELPAY
+      - ZALOPAY
+      example: PAYMAYA
+      type: string
+    EwalletChannelProperties:
+      description: Ewallet Channel Properties
+      example:
+        success_return_url: https://redirect.me/good
+        failure_return_url: https://redirect.me/bad
+        cancel_return_url: https://redirect.me/cancel
+      nullable: false
+      properties:
+        success_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            is successful
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+        failure_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            failed
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+        cancel_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            cancelled
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+        mobile_number:
+          description: Mobile number of customer in E.164 format (e.g. +628123123123).
+            For OVO one time payment use only.
+          example: +628123123123
+          type: string
+        redeem_points:
+          description: "REDEEM_NONE will not use any point, REDEEM_ALL will use all\
+            \ available points before cash balance is used. For OVO and ShopeePay\
+            \ tokenized payment use only."
+          example: REDEEM_NONE
+          type: string
+        cashtag:
+          description: Available for JENIUSPAY only
+          example: $abc1234
+          pattern: "^[$][a-zA-Z0-9_]{3,15}$"
+          type: string
+      type: object
+    EwalletAccount:
+      description: Ewallet Account Properties
+      example:
+        name: John Peter Doe
+        account_details: +63(2)123456XXXX
+        balance: null
+        point_balance: null
+      nullable: false
+      properties:
+        name:
+          description: Name of the eWallet account holder. The value is null if unavailableName
+            of the eWallet account holder. The value is null if unavailable
+          nullable: true
+          type: string
+        account_details:
+          description: Identifier from eWallet provider e.g. phone number. The value
+            is null if unavailable
+          nullable: true
+          type: string
+        balance:
+          description: The main balance amount on eWallet account provided from eWallet
+            provider. The value is null if unavailable
+          format: double
+          nullable: true
+          type: number
+        point_balance:
+          description: The point balance amount on eWallet account. Applicable only
+            on some eWallet provider that has point system. The value is null if unavailabl
+          format: double
+          nullable: true
+          type: number
+      type: object
+    MutableEwallet:
+      example:
+        channel_properties:
+          success_return_url: https://redirect.me/good
+          failure_return_url: https://redirect.me/bad
+          cancel_return_url: https://redirect.me/cancel
+        channel_code: PAYMAYA
+        account:
+          name: John Peter Doe
+          account_details: +63(2)123456XXXX
+          balance: null
+          point_balance: null
+      properties:
+        channel_code:
+          $ref: '#/components/schemas/EwalletChannelCode'
+        channel_properties:
+          $ref: '#/components/schemas/EwalletChannelProperties'
+        account:
+          $ref: '#/components/schemas/EwalletAccount'
+      required:
+      - channel_code
+      type: object
+    PublicEwallet:
+      allOf:
+      - $ref: '#/components/schemas/MutableEwallet'
+      description: Ewallet Payment Method Details
+      nullable: true
+      type: object
+    InternalEwallet:
+      allOf:
+      - $ref: '#/components/schemas/PublicEwallet'
+      - $ref: '#/components/schemas/InternalEwallet_allOf'
+      description: Ewallet Payment Method Details
+      nullable: true
+      type: object
+    DirectDebitChannelCode:
+      description: Direct Debit Channel Code
+      enum:
+      - BCA_KLIKPAY
+      - BCA_ONEKLIK
+      - BDO
+      - BPI
+      - BRI
+      - BNI
+      - CHINABANK
+      - CIMBNIAGA
+      - MTB
+      - RCBC
+      - UBP
+      - MANDIRI
+      - BBL
+      - SCB
+      - KTB
+      - BAY
+      - KBANK_MB
+      - BAY_MB
+      - KTB_MB
+      - BBL_MB
+      - SCB_MB
+      - BDO_EPAY
+      - AUTODEBIT_UBP
+      - AFFIN_FPX
+      - AGRO_FPX
+      - ALLIANCE_FPX
+      - AMBANK_FPX
+      - ISLAM_FPX
+      - MUAMALAT_FPX
+      - BOC_FPX
+      - RAKYAT_FPX
+      - BSN_FPX
+      - CIMB_FPX
+      - HLB_FPX
+      - HSBC_FPX
+      - KFH_FPX
+      - MAYB2E_FPX
+      - MAYB2U_FPX
+      - OCBC_FPX
+      - PUBLIC_FPX
+      - RHB_FPX
+      - SCH_FPX
+      - UOB_FPX
+      example: BRI
+      type: string
+    DirectDebitChannelProperties:
+      description: Direct Debit Channel Properties
+      example:
+        success_return_url: https://redirect.me/good
+        failure_return_url: https://redirect.me/bad
+      nullable: true
+      properties:
+        success_return_url:
+          format: uri
+          type: string
+        failure_return_url:
+          format: uri
+          nullable: true
+          type: string
+        mobile_number:
+          description: Mobile number of the customer registered to the partner channel
+          example: +62818555988
+          nullable: true
+          type: string
+        card_last_four:
+          description: Last four digits of the debit card
+          example: "8888"
+          nullable: true
+          type: string
+        card_expiry:
+          description: Expiry month and year of the debit card (in MM/YY format)
+          example: 06/24
+          nullable: true
+          type: string
+        email:
+          description: Email address of the customer that is registered to the partner
+            channel
+          example: test.email@xendit.co
+          nullable: true
+          type: string
+        identity_document_number:
+          description: Identity number of the customer registered to the partner channel
+          example: "1234567891113"
+          nullable: true
+          type: string
+        require_auth:
+          nullable: true
+          type: boolean
+      type: object
+    MutableDirectDebit:
+      example:
+        channel_properties:
+          success_return_url: https://redirect.me/good
+          failure_return_url: https://redirect.me/bad
+        channel_code: BRI
+      properties:
+        channel_code:
+          $ref: '#/components/schemas/DirectDebitChannelCode'
+        channel_properties:
+          $ref: '#/components/schemas/DirectDebitChannelProperties'
+      required:
+      - channel_code
+      - channel_properties
+      type: object
+    DirectDebitType:
+      enum:
+      - DEBIT_CARD
+      - BANK_ACCOUNT
+      - BANK_REDIRECT
+      type: string
+    DirectDebitBankAccount:
+      nullable: true
+      properties:
+        masked_bank_account_number:
+          example: 233eca40ff303ba15bf39052ca3102c6
+          nullable: true
+          type: string
+        bank_account_hash:
+          example: 233eca40ff303ba15bf39052ca3102c6
+          nullable: true
+          type: string
+        mobile_number:
+          description: Mobile number of the customer registered to the partner channel
+          example: +62818555988
+          nullable: true
+          type: string
+        identity_document_number:
+          description: Identity number of the customer registered to the partner channel
+          example: "1234567891113"
+          nullable: true
+          type: string
+      type: object
+    DirectDebitDebitCard:
+      nullable: true
+      properties:
+        mobile_number:
+          description: Mobile number of the customer registered to the partner channel
+          example: +62818555988
+          nullable: true
+          type: string
+        card_last_four:
+          description: Last four digits of the debit card
+          example: "8888"
+          nullable: true
+          type: string
+        card_expiry:
+          description: Expiry month and year of the debit card (in MM/YY format)
+          example: 06/24
+          nullable: true
+          type: string
+        email:
+          description: Email address of the customer that is registered to the partner
+            channel
+          example: test.email@xendit.co
+          nullable: true
+          type: string
+      type: object
+    PublicDirectDebit:
+      allOf:
+      - $ref: '#/components/schemas/MutableDirectDebit'
+      - $ref: '#/components/schemas/PublicDirectDebit_allOf'
+      description: Direct Debit Payment Method Details
+      nullable: true
+      type: object
+    InternalDirectDebit:
+      allOf:
+      - $ref: '#/components/schemas/PublicDirectDebit'
+      - $ref: '#/components/schemas/InternalEwallet_allOf'
+      description: Direct Debit Payment Method Details
+      nullable: true
+      type: object
+    Object:
+      nullable: true
+      type: object
+    PaymentMethodAction:
+      properties:
+        action:
+          type: string
+        method:
+          type: string
+        url:
+          type: string
+        url_type:
+          type: string
+      type: object
+    Datetime:
+      example: 2016-08-29T09:12:33.001Z
+      format: date-time
+      type: string
+    InternalV1CreatePaymentMethod:
+      nullable: false
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/PaymentMethodType'
+        country:
+          $ref: '#/components/schemas/PaymentMethodCountry'
+        status:
+          $ref: '#/components/schemas/PaymentMethodStatus'
+        business_id:
+          type: string
+        customer_id:
+          nullable: true
+          type: string
+        reusability:
+          $ref: '#/components/schemas/PaymentMethodReusability'
+        ewallet:
+          $ref: '#/components/schemas/InternalEwallet'
+        direct_debit:
+          $ref: '#/components/schemas/InternalDirectDebit'
+        metadata:
+          nullable: true
+          type: object
+        internal_metadata:
+          nullable: true
+          type: object
+        actions:
+          items:
+            $ref: '#/components/schemas/PaymentMethodAction'
+          type: array
+        created:
+          example: 2016-08-29T09:12:33.001Z
+          format: date-time
+          type: string
+        updated:
+          example: 2016-08-29T09:12:33.001Z
+          format: date-time
+          type: string
+      required:
+      - type
+      type: object
+    BillingInformation:
+      description: Billing Information
+      example:
+        country: country
+        city: city
+        province_state: province_state
+        street_line2: street_line2
+        street_line1: street_line1
+        postal_code: postal_code
+      nullable: true
+      properties:
+        country:
+          maxLength: 2
+          type: string
+        street_line1:
+          maxLength: 255
+          nullable: true
+          type: string
+        street_line2:
+          maxLength: 255
+          nullable: true
+          type: string
+        city:
+          maxLength: 255
+          nullable: true
+          type: string
+        province_state:
+          maxLength: 255
+          nullable: true
+          type: string
+        postal_code:
+          maxLength: 255
+          nullable: true
+          type: string
+      required:
+      - country
+      type: object
+    BasePaymentMethod:
+      nullable: false
+      properties:
+        id:
+          type: string
+        business_id:
+          type: string
+        type:
+          $ref: '#/components/schemas/PaymentMethodType'
+        country:
+          $ref: '#/components/schemas/PaymentMethodCountry'
+        customer_id:
+          nullable: true
+          type: string
+        customer:
+          nullable: true
+          type: object
+        reference_id:
+          type: string
+        description:
+          nullable: true
+          type: string
+        status:
+          $ref: '#/components/schemas/PaymentMethodStatus'
+        reusability:
+          $ref: '#/components/schemas/PaymentMethodReusability'
+        actions:
+          items:
+            $ref: '#/components/schemas/PaymentMethodAction'
+          type: array
+        metadata:
+          nullable: true
+          type: object
+        billing_information:
+          $ref: '#/components/schemas/BillingInformation'
+        failure_code:
+          nullable: true
+          type: string
+        created:
+          example: 2016-08-29T09:12:33.001Z
+          format: date-time
+          type: string
+        updated:
+          example: 2016-08-29T09:12:33.001Z
+          format: date-time
+          type: string
+      required:
+      - id
+      type: object
+    CardChannelProperties:
+      description: Card Channel Properties
+      example:
+        success_return_url: https://redirect.me/good
+        failure_return_url: https://redirect.me/bad
+      nullable: true
+      properties:
+        skip_three_d_secure:
+          description: This field value is only being used for reusability = MULTIPLE_USE.
+            To indicate whether to perform 3DS during the linking phase. Defaults
+            to false.
+          example: false
+          nullable: true
+          type: boolean
+        success_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            is successful
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          nullable: true
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+        failure_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            failed
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          nullable: true
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+        cardonfile_type:
+          description: Type of “credential-on-file” / “card-on-file” payment being
+            made. Indicate that this payment uses a previously linked Payment Method
+            for charging.
+          enum:
+          - MERCHANT_UNSCHEDULED
+          - CUSTOMER_UNSCHEDULED
+          - RECURRING
+          example: RECURRING
+          nullable: true
+          type: string
+      type: object
+    TokenizedCardInformation:
+      description: Tokenized Card Information
+      nullable: false
+      properties:
+        token_id:
+          type: string
+        masked_card_number:
+          description: 1st 6 and last 4 digits of the card
+          type: string
+        cardholder_name:
+          description: Cardholder name is optional but recommended for 3DS 2 / AVS
+            verification
+          nullable: true
+          type: string
+        expiry_month:
+          description: Card expiry month in MM format
+          type: string
+        expiry_year:
+          description: Card expiry month in YY format
+          type: string
+        fingerprint:
+          description: "Xendit-generated identifier for the unique card number. Multiple\
+            \ payment method objects can be created for the same account - e.g. if\
+            \ the user first creates a one-time payment request, and then later on\
+            \ creates a multiple-use payment method using the same account.   The\
+            \ fingerprint helps to identify the unique account being used."
+          type: string
+        type:
+          description: Whether the card is a credit or debit card
+          type: string
+        network:
+          description: "Card network - VISA, MASTERCARD, JCB, AMEX, DISCOVER, BCA"
+          type: string
+        country:
+          description: Country where the card was issued ISO 3166-1 Alpha-2
+          type: string
+        issuer:
+          description: "Issuer of the card, most often an issuing bank For example,\
+            \ “BCA”, “MANDIRI”"
+          type: string
+      required:
+      - country
+      - expiry_month
+      - expiry_year
+      - fingerprint
+      - issuer
+      - masked_card_number
+      - network
+      - token_id
+      - type
+      type: object
+    CardVerificationResultsThreeDSecure:
+      nullable: true
+      properties:
+        three_d_secure_flow:
+          enum:
+          - CHALLENGE
+          - FRICTIONLESS
+          nullable: true
+          type: string
+        eci_code:
+          nullable: true
+          type: string
+        three_d_secure_result:
+          nullable: true
+          type: string
+        three_d_secure_result_reason:
+          nullable: true
+          type: string
+        three_d_secure_version:
+          nullable: true
+          type: string
+      type: object
+    CardVerificationResults:
+      nullable: true
+      properties:
+        three_d_secure:
+          $ref: '#/components/schemas/CardVerificationResultsThreeDSecure'
+        cvv_result:
+          nullable: true
+          type: string
+        address_verification_result:
+          nullable: true
+          type: string
+      required:
+      - three_d_secure
+      type: object
+    PublicCard:
+      description: Card Payment Method Details
+      nullable: true
+      properties:
+        currency:
+          nullable: true
+          type: string
+        channel_properties:
+          $ref: '#/components/schemas/CardChannelProperties'
+        card_information:
+          $ref: '#/components/schemas/TokenizedCardInformation'
+        card_verification_results:
+          $ref: '#/components/schemas/CardVerificationResults'
+      required:
+      - channel_properties
+      - currency
+      type: object
+    InternalCard:
+      allOf:
+      - $ref: '#/components/schemas/PublicCard'
+      description: Card Payment Method Details
+      nullable: true
+      type: object
+    CryptoChannelCode:
+      description: Crypto Channel Code
+      enum:
+      - BTC
+      - ETH
+      - USDC
+      example: BTC
+      nullable: true
+      type: string
+    CryptoChannelProperties:
+      description: Crypto Channel Properties
+      example:
+        success_return_url: https://redirect.me/good
+        failure_return_url: https://redirect.me/bad
+        cancel_return_url: https://redirect.me/cancel
+      nullable: false
+      properties:
+        success_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            is successful
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          nullable: true
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+        failure_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            failed
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          nullable: true
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+        cancel_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            cancelled
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          nullable: true
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+      type: object
+    CryptoWallet:
+      description: Crypto Wallet
+      example:
+        address: address
+      nullable: true
+      properties:
+        address:
+          nullable: true
+          type: string
+      type: object
+    MutableCrypto:
+      example:
+        wallet:
+          address: address
+        channel_properties:
+          success_return_url: https://redirect.me/good
+          failure_return_url: https://redirect.me/bad
+          cancel_return_url: https://redirect.me/cancel
+        channel_code: BTC
+      properties:
+        channel_code:
+          $ref: '#/components/schemas/CryptoChannelCode'
+        channel_properties:
+          $ref: '#/components/schemas/CryptoChannelProperties'
+        wallet:
+          $ref: '#/components/schemas/CryptoWallet'
+      type: object
+    PublicCrypto:
+      allOf:
+      - $ref: '#/components/schemas/MutableCrypto'
+      description: Cryptocurrency Payment Method Details
+      nullable: true
+      type: object
+    InternalCrypto:
+      allOf:
+      - $ref: '#/components/schemas/PublicCrypto'
+      description: Cryptocurrency Payment Method Details
+      nullable: true
+      type: object
+    DirectBankTransferChannelCode:
+      description: Direct Bank Transfer Channel Code
+      enum:
+      - DP_BDO
+      - DP_MBT
+      example: DP_BDO
+      type: string
+    DirectBankTransferChannelProperties:
+      description: Direct Bank Transfer Channel Properties
+      example:
+        authorized_return_url: https://redirect.me/good
+        failure_return_url: https://redirect.me/bad
+      nullable: false
+      properties:
+        authorized_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            is successful
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+        failure_return_url:
+          description: URL where the end-customer is redirected if the authorization
+            failed
+          example: https://webhook.site/f4b755f5-4770-4a11-8c72-cc0b3cc6b882
+          pattern: "^\\S{1,255}:\\/\\/\\S{0,1000}$"
+          type: string
+      type: object
+    MutableDirectBankTransfer:
+      example:
+        channel_properties:
+          authorized_return_url: https://redirect.me/good
+          failure_return_url: https://redirect.me/bad
+        channel_code: DP_BDO
+      properties:
+        channel_code:
+          $ref: '#/components/schemas/DirectBankTransferChannelCode'
+        channel_properties:
+          $ref: '#/components/schemas/DirectBankTransferChannelProperties'
+      required:
+      - channel_code
+      - channel_properties
+      type: object
+    PublicDirectBankTransfer:
+      allOf:
+      - $ref: '#/components/schemas/MutableDirectBankTransfer'
+      description: Direct Bank Transfer Payment Method Details
+      nullable: true
+      type: object
+    InternalDirectBankTransfer:
+      allOf:
+      - $ref: '#/components/schemas/PublicDirectBankTransfer'
+      - $ref: '#/components/schemas/InternalDirectBankTransfer_allOf'
+      description: Direct Bank Transfer Payment Method Details
+      nullable: true
+      type: object
+    OverTheCounterChannelCode:
+      description: Over The Counter Channel Code
+      enum:
+      - 7ELEVEN
+      - 7ELEVEN_CLIQQ
+      - CEBUANA
+      - ECPAY
+      - PALAWAN
+      - MLHUILLIER
+      - ECPAY_DRAGONLOAN
+      - LBC
+      - ECPAY_SCHOOL
+      - RD_PAWNSHOP
+      - CVM
+      - USSC
+      - SM_BILLS
+      - ROBINSONS_BILLS
+      - ALFAMART
+      - INDOMARET
+      example: 7ELEVEN_CLIQQ
+      type: string
+    OverTheCounterChannelProperties:
+      description: Over The Counter Channel Properties
+      example:
+        payment_code: "12345"
+        customer_name: Rika Sutanto
+        expires_at: 2022-01-01T00:00:00Z
+      nullable: false
+      properties:
+        payment_code:
+          description: "The payment code that you want to assign, e.g 12345. If you\
+            \ do not send one, one will be picked at random."
+          example: "12345"
+          type: string
+        customer_name:
+          description: Name of customer.
+          example: Rika Sutanto
+          type: string
+        expires_at:
+          description: The time when the payment code will be expired. The minimum
+            is 2 hours and the maximum is 9 days for 7ELEVEN. Default expired date
+            will be 2 days from payment code generated.
+          example: 2022-01-01T00:00:00Z
+          format: date-time
+          type: string
+      required:
+      - customer_name
+      type: object
+    MutableOverTheCounter:
+      example:
+        amount: 0.8008281904610115
+        currency: currency
+        channel_properties:
+          payment_code: "12345"
+          customer_name: Rika Sutanto
+          expires_at: 2022-01-01T00:00:00Z
+        channel_code: 7ELEVEN_CLIQQ
+      properties:
+        amount:
+          format: double
+          nullable: true
+          type: number
+        currency:
+          type: string
+        channel_code:
+          $ref: '#/components/schemas/OverTheCounterChannelCode'
+        channel_properties:
+          $ref: '#/components/schemas/OverTheCounterChannelProperties'
+      required:
+      - channel_code
+      - channel_properties
+      type: object
+    PublicOverTheCounter:
+      allOf:
+      - $ref: '#/components/schemas/MutableOverTheCounter'
+      description: Over The Counter Payment Method Details
+      nullable: true
+      type: object
+    InternalOverTheCounter:
+      allOf:
+      - $ref: '#/components/schemas/PublicOverTheCounter'
+      - $ref: '#/components/schemas/InternalOverTheCounter_allOf'
+      description: Over The Counter Payment Method Details
+      nullable: true
+      type: object
+    VirtualAccountChannelCode:
+      description: Virtual Account Channel Code
+      enum:
+      - BCA
+      - BJB
+      - BNI
+      - BRI
+      - MANDIRI
+      - PERMATA
+      - BSI
+      - CIMB
+      - SAHABAT_SAMPOERNA
+      - ARTAJASA
+      - PV
+      - VIETCAPITAL
+      - WOORI
+      example: BCA
+      type: string
+    VirtualAccountChannelProperties:
+      description: Virtual Account Channel Properties
+      example:
+        customer_name: Rika Sutanto
+        description: Payment for SSS
+        expires_at: 2022-01-01T00:00:00Z
+      nullable: false
+      properties:
+        customer_name:
+          description: Name of customer.
+          example: Rika Sutanto
+          type: string
+        virtual_account_number:
+          description: "You can assign specific Virtual Account number using this\
+            \ parameter. If you do not send one, one will be picked at random. Make\
+            \ sure the number you specify is within your Virtual Account range."
+          example: "262159999999999"
+          type: string
+        expires_at:
+          description: "The date and time in ISO 8601 UTC+0 when the virtual account\
+            \ number will be expired. Default: The default expiration date will be\
+            \ 31 years from creation date."
+          example: 2022-01-01T00:00:00Z
+          format: date-time
+          type: string
+        suggested_amount:
+          description: "The suggested amount you want to assign. Note: Suggested amounts\
+            \ is the amounts that can see as a suggestion, but user can still put\
+            \ any numbers (only supported for Mandiri and BRI)"
+          example: 100000
+          format: double
+          type: number
+      type: object
+    MutableVirtualAccount:
+      example:
+        amount: 6.027456183070403
+        min_amount: 1.1465812980502945
+        alternative_display_types:
+        - QR_STRING
+        - QR_STRING
+        max_amount: 1.5962133916683183
+        currency: currency
+        channel_properties:
+          customer_name: Rika Sutanto
+          description: Payment for SSS
+          expires_at: 2022-01-01T00:00:00Z
+        channel_code: BCA
+      properties:
+        amount:
+          format: double
+          nullable: true
+          type: number
+        min_amount:
+          format: double
+          minimum: 1
+          nullable: true
+          type: number
+        max_amount:
+          format: double
+          minimum: 1
+          nullable: true
+          type: number
+        currency:
+          type: string
+        channel_code:
+          $ref: '#/components/schemas/VirtualAccountChannelCode'
+        channel_properties:
+          $ref: '#/components/schemas/VirtualAccountChannelProperties'
+        alternative_display_types:
+          description: Alternative display requested for the virtual account
+          items:
+            enum:
+            - QR_STRING
+            type: string
+          type: array
+      required:
+      - channel_code
+      - channel_properties
+      type: object
+    VirtualAccountAlternativeDisplay:
+      description: Alternative Display Object
+      properties:
+        type:
+          description: Type of the alternative display
+          enum:
+          - QR_STRING
+          readOnly: true
+          type: string
+        data:
+          description: Data payload of the given alternative display
+          type: string
+      type: object
+    InternalVirtualAccount:
+      allOf:
+      - $ref: '#/components/schemas/MutableVirtualAccount'
+      - $ref: '#/components/schemas/InternalVirtualAccount_allOf'
+      description: Virtual Account Payment Method Details
+      nullable: true
+      type: object
+    QRCodeChannelCode:
+      description: QR Code Channel Code
+      enum:
+      - QRIS
+      - DANA
+      - RCBC
+      - PROMPTPAY
+      - LINKAJA
+      example: QRIS
+      nullable: true
+      type: string
+    QRCodeChannelProperties:
+      description: QR Code Channel Properties
+      example:
+        qr_string: 0002010102##########CO.XENDIT.WWW011893600#######14220002152#####414220010303TTT####015CO.XENDIT.WWW02180000000000000000000TTT52
+          045######ID5911XenditQRIS6007Jakarta6105121606##########3k1mOnF73h11111111#3k1mOnF73h6v53033605401163040BDB
+        expires_at: 2022-01-01T00:00:00Z
+      nullable: true
+      properties:
+        qr_string:
+          description: "QR string to be rendered for display to end users. QR string\
+            \ to image rendering are commonly available in software libraries (e.g\
+            \ Nodejs, PHP, Java)"
+          example: 0002010102##########CO.XENDIT.WWW011893600#######14220002152#####414220010303TTT####015CO.XENDIT.WWW02180000000000000000000TTT52
+            045######ID5911XenditQRIS6007Jakarta6105121606##########3k1mOnF73h11111111#3k1mOnF73h6v53033605401163040BDB
+          type: string
+        expires_at:
+          example: 2022-01-01T00:00:00Z
+          format: date-time
+          type: string
+      type: object
+    MutableQRCode:
+      example:
+        amount: 5.637376656633329
+        currency: currency
+        channel_properties:
+          qr_string: 0002010102##########CO.XENDIT.WWW011893600#######14220002152#####414220010303TTT####015CO.XENDIT.WWW02180000000000000000000TTT52
+            045######ID5911XenditQRIS6007Jakarta6105121606##########3k1mOnF73h11111111#3k1mOnF73h6v53033605401163040BDB
+          expires_at: 2022-01-01T00:00:00Z
+        channel_code: QRIS
+      properties:
+        amount:
+          format: double
+          nullable: true
+          type: number
+        currency:
+          type: string
+        channel_code:
+          $ref: '#/components/schemas/QRCodeChannelCode'
+        channel_properties:
+          $ref: '#/components/schemas/QRCodeChannelProperties'
+      type: object
+    PublicQRCode:
+      allOf:
+      - $ref: '#/components/schemas/MutableQRCode'
+      description: QR Code Payment Method Details
+      nullable: true
+      type: object
+    InternalQRCode:
+      allOf:
+      - $ref: '#/components/schemas/PublicQRCode'
+      - $ref: '#/components/schemas/InternalQRCode_allOf'
+      description: QR Code Payment Method Details
+      nullable: true
+      type: object
+    InternalPaymentMethod:
+      allOf:
+      - $ref: '#/components/schemas/BasePaymentMethod'
+      - $ref: '#/components/schemas/InternalPaymentMethod_allOf'
+    InternalV1PatchPaymentMethod:
+      nullable: false
+      properties:
+        status:
+          $ref: '#/components/schemas/PaymentMethodStatus'
+        metadata:
+          nullable: true
+          type: object
+        updated:
+          example: 2016-08-29T09:12:33.001Z
+          format: date-time
+          type: string
+      type: object
+    InternalPaymentMethodList:
+      nullable: false
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/InternalPaymentMethod'
+          type: array
+        has_more:
+          type: boolean
+      required:
+      - data
+      type: object
+    OptionalPaymentMethodCountry:
+      enum:
+      - PH
+      - ID
+      - VN
+      - TH
+      - MY
+      nullable: true
+      type: string
+    CardTokenInfo:
+      description: Card Token Info
+      nullable: true
+      properties:
+        bank:
+          type: string
+        country:
+          type: string
+        type:
+          type: string
+        brand:
+          type: string
+        card_art_url:
+          type: string
+        fingerprint:
+          type: string
+      type: object
+    CardBillingDetailsAddress:
+      description: Card Billing Details Address
+      nullable: true
+      properties:
+        country:
+          maxLength: 2
+          type: string
+        street_line1:
+          maxLength: 255
+          type: string
+        street_line2:
+          maxLength: 255
+          type: string
+        city:
+          maxLength: 255
+          type: string
+        province_state:
+          maxLength: 255
+          type: string
+        province:
+          maxLength: 255
+          type: string
+        state:
+          maxLength: 255
+          type: string
+        postal_code:
+          maxLength: 255
+          type: string
+        category:
+          maxLength: 255
+          type: string
+        description:
+          maxLength: 255
+          type: string
+      type: object
+    CardBillingDetails:
+      description: Card Billing Details
+      nullable: true
+      properties:
+        first_name:
+          nullable: true
+          type: string
+        last_name:
+          nullable: true
+          type: string
+        email:
+          nullable: true
+          type: string
+        phone:
+          nullable: true
+          type: string
+        address_line_1:
+          nullable: true
+          type: string
+        address_line_2:
+          nullable: true
+          type: string
+        address_city:
+          nullable: true
+          type: string
+        address_country:
+          nullable: true
+          type: string
+        address_postal_code:
+          nullable: true
+          type: string
+        address_state:
+          nullable: true
+          type: string
+        given_names:
+          nullable: true
+          type: string
+        middle_name:
+          nullable: true
+          type: string
+        surname:
+          nullable: true
+          type: string
+        mobile_number:
+          nullable: true
+          type: string
+        phone_number:
+          nullable: true
+          type: string
+        address:
+          $ref: '#/components/schemas/CardBillingDetailsAddress'
+      type: object
+    CardToken:
+      description: Card Token
+      nullable: false
+      properties:
+        id:
+          type: string
+        payment_method_id:
+          type: string
+        reference_id:
+          type: string
+        status:
+          enum:
+          - ACTIVE
+          - INACTIVE
+          - EXPIRED
+          type: string
+        currency:
+          type: string
+        redirect_url:
+          nullable: true
+          type: string
+        masked_card_number:
+          nullable: true
+          type: string
+        expiry_month:
+          nullable: true
+          type: string
+        expiry_year:
+          nullable: true
+          type: string
+        card_info:
+          $ref: '#/components/schemas/CardTokenInfo'
+        billing_details:
+          $ref: '#/components/schemas/CardBillingDetails'
+      required:
+      - currency
+      - id
+      - payment_method_id
+      - reference_id
+      - status
+      type: object
+    MutableCard:
+      properties:
+        currency:
+          type: string
+        channel_properties:
+          $ref: '#/components/schemas/CardChannelProperties'
+        card_information:
+          $ref: '#/components/schemas/TokenizedCardInformation'
+        card_verification_results:
+          $ref: '#/components/schemas/CardVerificationResults'
+        token:
+          $ref: '#/components/schemas/CardToken'
+      required:
+      - currency
+      type: object
+    BasketItem:
+      nullable: true
+      properties:
+        reference_id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+        category:
+          type: string
+        sub_category:
+          type: string
+        currency:
+          type: string
+        quantity:
+          type: number
+        price:
+          type: number
+        payer_charged_currency:
+          type: string
+        payer_charged_price:
+          type: number
+        url:
+          type: string
+        metadata:
+          type: object
+      required:
+      - category
+      - currency
+      - name
+      - price
+      - quantity
+      type: object
+    Basket:
+      items:
+        $ref: '#/components/schemas/BasketItem'
+      nullable: true
+      type: array
+    InternalCreatePaymentMethod:
+      nullable: false
+      properties:
+        type:
+          $ref: '#/components/schemas/PaymentMethodType'
+        country:
+          $ref: '#/components/schemas/OptionalPaymentMethodCountry'
+        reusability:
+          $ref: '#/components/schemas/PaymentMethodReusability'
+        customer_id:
+          nullable: true
+          type: string
+        customer:
+          nullable: true
+          type: object
+        reference_id:
+          type: string
+        description:
+          nullable: true
+          type: string
+        card:
+          $ref: '#/components/schemas/MutableCard'
+        cryptocurrency:
+          $ref: '#/components/schemas/MutableCrypto'
+        direct_bank_transfer:
+          $ref: '#/components/schemas/MutableDirectBankTransfer'
+        direct_debit:
+          $ref: '#/components/schemas/MutableDirectDebit'
+        ewallet:
+          $ref: '#/components/schemas/MutableEwallet'
+        over_the_counter:
+          $ref: '#/components/schemas/MutableOverTheCounter'
+        qr_code:
+          $ref: '#/components/schemas/MutableQRCode'
+        virtual_account:
+          $ref: '#/components/schemas/MutableVirtualAccount'
+        metadata:
+          nullable: true
+          type: object
+        items:
+          items:
+            $ref: '#/components/schemas/BasketItem'
+          nullable: true
+          type: array
+        internal_metadata:
+          nullable: true
+          type: object
+        billing_information:
+          $ref: '#/components/schemas/BillingInformation'
+      required:
+      - reusability
+      - type
+      type: object
+    PatchCrypto:
+      properties:
+        channel_code:
+          $ref: '#/components/schemas/CryptoChannelCode'
+        wallet:
+          $ref: '#/components/schemas/CryptoWallet'
+      type: object
+    OverTheCounterChannelPropertiesPatch:
+      description: Over The Counter Channel Properties Patchables
+      example:
+        payment_code: "12345"
+        customer_name: Rika Sutanto
+        expires_at: 2022-01-01T00:00:00Z
+      nullable: false
+      properties:
+        customer_name:
+          description: Name of customer.
+          example: Rika Sutanto
+          type: string
+        expires_at:
+          description: The time when the payment code will be expired. The minimum
+            is 2 hours and the maximum is 9 days for 7ELEVEN. Default expired date
+            will be 2 days from payment code generated.
+          example: 2022-01-01T00:00:00Z
+          format: date-time
+          type: string
+      type: object
+    PatchOverTheCounter:
+      example:
+        amount: 0.8008281904610115
+        channel_properties:
+          payment_code: "12345"
+          customer_name: Rika Sutanto
+          expires_at: 2022-01-01T00:00:00Z
+      properties:
+        amount:
+          format: double
+          nullable: true
+          type: number
+        channel_properties:
+          $ref: '#/components/schemas/OverTheCounterChannelPropertiesPatch'
+      type: object
+    InternalPatchPaymentMethod:
+      nullable: false
+      properties:
+        status:
+          $ref: '#/components/schemas/PaymentMethodStatus'
+        cryptocurrency:
+          $ref: '#/components/schemas/PatchCrypto'
+        over_the_counter:
+          $ref: '#/components/schemas/PatchOverTheCounter'
+      type: object
+    InternalLATLinked:
+      nullable: false
+      properties:
+        event:
+          enum:
+          - linked_account_token.successful
+          - payment_method.expiry.expiring
+          - payment_method.expiry.expired
+          type: string
+        timestamp:
+          example: 2016-08-29T09:12:33.001Z
+          format: date-time
+          type: string
+        channel_code:
+          type: string
+        id:
+          type: string
+        type:
+          enum:
+          - EWALLET
+          - DIRECT_DEBIT
+          - DEBIT_CARD
+          - BANK_ACCOUNT
+          type: string
+        accounts:
+          items:
+            $ref: '#/components/schemas/InternalLATLinked_accounts_inner'
+          type: array
+      required:
+      - accounts
+      - channel_code
+      - event
+      - id
+      - timestamp
+      - type
+      type: object
+    InternalExpirePaymentMethod:
+      nullable: true
+      properties:
+        success_return_url:
+          description: URL where the end customer is redirected if the unlinking authorization
+            is successful.
+          nullable: true
+          type: string
+        failure_return_url:
+          description: URL where the end customer is redirected if the unlinking authorization
+            is failed.
+          nullable: true
+          type: string
+      type: object
+    ChannelWithCountry:
+      description: Channel code with country
+      properties:
+        channel_code:
+          nullable: true
+          type: string
+        country:
+          $ref: '#/components/schemas/PaymentMethodCountry'
+      type: object
+    ChannelResponse:
+      description: Channel code with country list and error list
+      properties:
+        channels:
+          items:
+            $ref: '#/components/schemas/ChannelWithCountry'
+          type: array
+        errors:
+          items:
+            $ref: '#/components/schemas/ChannelResponse_errors_inner'
+          nullable: true
+          type: array
+      type: object
+    PublicPaymentMethod:
+      allOf:
+      - $ref: '#/components/schemas/BasePaymentMethod'
+      - $ref: '#/components/schemas/PublicPaymentMethod_allOf'
+    PublicPaymentMethodList:
+      example:
+        data:
+        - null
+        - null
+        has_more: true
+      nullable: false
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/PublicPaymentMethod'
+          type: array
+        has_more:
+          type: boolean
+      required:
+      - data
+      type: object
+    PublicCreatePaymentMethod:
+      example:
+        billing_information:
+          country: country
+          city: city
+          province_state: province_state
+          street_line2: street_line2
+          street_line1: street_line1
+          postal_code: postal_code
+        country: null
+        metadata: "{}"
+        reference_id: reference_id
+        over_the_counter:
+          amount: 0.8008281904610115
+          currency: currency
+          channel_properties:
+            payment_code: "12345"
+            customer_name: Rika Sutanto
+            expires_at: 2022-01-01T00:00:00Z
+          channel_code: 7ELEVEN_CLIQQ
+        reusability: null
+        description: description
+        type: null
+        direct_debit:
+          channel_properties:
+            success_return_url: https://redirect.me/good
+            failure_return_url: https://redirect.me/bad
+          channel_code: BRI
+        cryptocurrency:
+          wallet:
+            address: address
+          channel_properties:
+            success_return_url: https://redirect.me/good
+            failure_return_url: https://redirect.me/bad
+            cancel_return_url: https://redirect.me/cancel
+          channel_code: BTC
+        ewallet:
+          channel_properties:
+            success_return_url: https://redirect.me/good
+            failure_return_url: https://redirect.me/bad
+            cancel_return_url: https://redirect.me/cancel
+          channel_code: PAYMAYA
+          account:
+            name: John Peter Doe
+            account_details: +63(2)123456XXXX
+            balance: null
+            point_balance: null
+        virtual_account:
+          amount: 6.027456183070403
+          min_amount: 1.1465812980502945
+          alternative_display_types:
+          - QR_STRING
+          - QR_STRING
+          max_amount: 1.5962133916683183
+          currency: currency
+          channel_properties:
+            customer_name: Rika Sutanto
+            description: Payment for SSS
+            expires_at: 2022-01-01T00:00:00Z
+          channel_code: BCA
+        qr_code:
+          amount: 5.637376656633329
+          currency: currency
+          channel_properties:
+            qr_string: 0002010102##########CO.XENDIT.WWW011893600#######14220002152#####414220010303TTT####015CO.XENDIT.WWW02180000000000000000000TTT52
+              045######ID5911XenditQRIS6007Jakarta6105121606##########3k1mOnF73h11111111#3k1mOnF73h6v53033605401163040BDB
+            expires_at: 2022-01-01T00:00:00Z
+          channel_code: QRIS
+        customer_id: customer_id
+        direct_bank_transfer:
+          channel_properties:
+            authorized_return_url: https://redirect.me/good
+            failure_return_url: https://redirect.me/bad
+          channel_code: DP_BDO
+      nullable: false
+      properties:
+        type:
+          $ref: '#/components/schemas/PaymentMethodType'
+        country:
+          $ref: '#/components/schemas/OptionalPaymentMethodCountry'
+        reusability:
+          $ref: '#/components/schemas/PaymentMethodReusability'
+        customer_id:
+          nullable: true
+          type: string
+        reference_id:
+          type: string
+        description:
+          nullable: true
+          type: string
+        cryptocurrency:
+          $ref: '#/components/schemas/MutableCrypto'
+        direct_bank_transfer:
+          $ref: '#/components/schemas/MutableDirectBankTransfer'
+        direct_debit:
+          $ref: '#/components/schemas/MutableDirectDebit'
+        ewallet:
+          $ref: '#/components/schemas/MutableEwallet'
+        over_the_counter:
+          $ref: '#/components/schemas/MutableOverTheCounter'
+        virtual_account:
+          $ref: '#/components/schemas/MutableVirtualAccount'
+        qr_code:
+          $ref: '#/components/schemas/MutableQRCode'
+        metadata:
+          nullable: true
+          type: object
+        billing_information:
+          $ref: '#/components/schemas/BillingInformation'
+      required:
+      - reusability
+      - type
+      type: object
+    VirtualAccountChannelPropertiesPatch:
+      description: Virtual Account Channel Properties
+      example:
+        expires_at: 2022-01-01T00:00:00Z
+        suggested_amount: 100000
+      nullable: false
+      properties:
+        expires_at:
+          description: "The date and time in ISO 8601 UTC+0 when the virtual account\
+            \ number will be expired. Default: The default expiration date will be\
+            \ 31 years from creation date."
+          example: 2022-01-01T00:00:00Z
+          format: date-time
+          type: string
+        suggested_amount:
+          description: "The suggested amount you want to assign. Note: Suggested amounts\
+            \ is the amounts that can see as a suggestion, but user can still put\
+            \ any numbers (only supported for Mandiri and BRI)"
+          example: 100000
+          format: double
+          minimum: 1
+          type: number
+      type: object
+    PatchVirtualAccount:
+      example:
+        amount: 6.027456183070403
+        min_amount: 1.1465812980502945
+        alternative_display_types:
+        - QR_STRING
+        - QR_STRING
+        max_amount: 1.5962133916683183
+        channel_properties:
+          expires_at: 2022-01-01T00:00:00Z
+          suggested_amount: 100000
+      properties:
+        amount:
+          format: double
+          nullable: true
+          type: number
+        min_amount:
+          format: double
+          minimum: 1
+          nullable: true
+          type: number
+        max_amount:
+          format: double
+          minimum: 1
+          nullable: true
+          type: number
+        channel_properties:
+          $ref: '#/components/schemas/VirtualAccountChannelPropertiesPatch'
+        alternative_display_types:
+          description: Alternative display requested for the virtual account
+          items:
+            enum:
+            - QR_STRING
+            type: string
+          type: array
+      type: object
+    PublicPatchPaymentMethod:
+      example:
+        reference_id: reference_id
+        over_the_counter:
+          amount: 0.8008281904610115
+          channel_properties:
+            payment_code: "12345"
+            customer_name: Rika Sutanto
+            expires_at: 2022-01-01T00:00:00Z
+        virtual_account:
+          amount: 6.027456183070403
+          min_amount: 1.1465812980502945
+          alternative_display_types:
+          - QR_STRING
+          - QR_STRING
+          max_amount: 1.5962133916683183
+          channel_properties:
+            expires_at: 2022-01-01T00:00:00Z
+            suggested_amount: 100000
+        description: description
+        reusability: null
+        status: null
+      properties:
+        description:
+          type: string
+        reference_id:
+          type: string
+        reusability:
+          $ref: '#/components/schemas/PaymentMethodReusability'
+        status:
+          $ref: '#/components/schemas/PaymentMethodStatus'
+        over_the_counter:
+          $ref: '#/components/schemas/PatchOverTheCounter'
+        virtual_account:
+          $ref: '#/components/schemas/PatchVirtualAccount'
+      type: object
+    PublicExpirePaymentMethod:
+      example:
+        failure_return_url: failure_return_url
+        success_return_url: success_return_url
+      nullable: true
+      properties:
+        success_return_url:
+          description: URL where the end customer is redirected if the unlinking authorization
+            is successful.
+          nullable: true
+          type: string
+        failure_return_url:
+          description: URL where the end customer is redirected if the unlinking authorization
+            is failed.
+          nullable: true
+          type: string
+      type: object
+    PublicAuthPaymentMethod:
+      example:
+        auth_code: auth_code
+      nullable: false
+      properties:
+        auth_code:
+          maxLength: 6
+          minLength: 6
+          type: string
+      required:
+      - auth_code
+      type: object
+    ChannelProperty:
+      allOf:
+      - $ref: '#/components/schemas/ChannelProperty_allOf'
+    ChannelAmountLimits:
+      allOf:
+      - $ref: '#/components/schemas/ChannelAmountLimits_allOf'
+    PublicPaymentChannel:
+      allOf:
+      - $ref: '#/components/schemas/PublicPaymentChannel_allOf'
+    PublicPaymentChannelList:
+      example:
+        data:
+        - null
+        - null
+        links:
+        - null
+        - null
+        has_more: true
+      properties:
+        data:
+          description: Array of resources that match the provided filters
+          items:
+            $ref: '#/components/schemas/PublicPaymentChannel'
+          type: array
+        links:
+          description: Array of objects that can be used to assist on navigating through
+            the data
+          items:
+            $ref: '#/components/schemas/PublicPaymentChannelList_links_inner'
+          type: array
+        has_more:
+          description: Indicates whether there are more items in the list
+          type: boolean
+      type: object
+    PublicPostSimulatePaymentChannelHealth:
+      example:
+        channel_code: channel_code
+        status: ONLINE
+      properties:
+        channel_code:
+          type: string
+        status:
+          enum:
+          - ONLINE
+          - UNPLANNED_DOWNTIME
+          - SCHEDULED_MAINTENANCE
+          - DEGRADED_SERVICES
+          - PARTNER_UNPLANNED_DOWNTIME
+          - PARTNER_SCHEDULED_MAINTENANCE
+          - PARTNER_DEGRADED_SERVICES
+          type: string
+      required:
+      - channel_code
+      - status
+      type: object
+    PublicPaymentChannelDowntimeOnlineData:
+      allOf:
+      - $ref: '#/components/schemas/PublicPaymentChannelDowntimeOnlineData_allOf'
+    PublicPaymentChannelDowntimeOnline:
+      allOf:
+      - $ref: '#/components/schemas/PublicPaymentChannelDowntimeOnline_allOf'
+    PublicSimulatePaymentChannelHealth:
+      allOf:
+      - $ref: '#/components/schemas/PublicPaymentChannelDowntimeOnline'
+    PublicSimulatePayment:
+      example:
+        message: message
+        status: status
+      properties:
+        status:
+          type: string
+        message:
+          type: string
+      type: object
+    getAllPaymentMethods_400_response:
+      properties:
+        error_code:
+          enum:
+          - API_VALIDATION_ERROR
+          - NOT_SUPPORTED_BY_CHANNEL
+          - EXPIRED_OTP_ERROR
+          - INVALID_ACCOUNT_DETAILS
+          - INVALID_OTP_ERROR
+          - INVALID_PAYMENT_METHOD
+          - MAX_OTP_ATTEMPTS_ERROR
+          - CUSTOMER_NOT_FOUND_ERROR
+          - ACCOUNT_ACCESS_BLOCKED
+          - MAX_ACCOUNT_LINKING
+          - INACTIVE_PAYMENT_METHOD
+          - PAYMENT_METHOD_NOT_SUPPORTED
+          - INCORRECT_AMOUNT
+          type: string
+        message:
+          example: An internal server error occurred
+          type: string
+      type: object
+    getAllPaymentMethods_403_response:
+      properties:
+        error_code:
+          enum:
+          - UNAUTHORIZED
+          - CHANNEL_NOT_ACTIVATED
+          type: string
+        message:
+          example: An internal server error occurred
+          type: string
+      type: object
+    getAllPaymentMethods_404_response:
+      properties:
+        error_code:
+          enum:
+          - DATA_NOT_FOUND
+          type: string
+        message:
+          example: An internal server error occurred
+          type: string
+      type: object
+    getAllPaymentMethods_default_response:
+      properties:
+        error_code:
+          type: string
+        message:
+          example: An internal server error occurred
+          type: string
+      type: object
+    createPaymentMethod_409_response:
+      properties:
+        error_code:
+          enum:
+          - PAYMENT_METHOD_ALREADY_ACTIVE
+          - PAYMENT_METHOD_ALREADY_FAILED
+          - DUPLICATE_ERROR
+          - IDEMPOTENCY_ERROR
+          type: string
+        message:
+          example: An internal server error occurred
+          type: string
+      type: object
+    createPaymentMethod_503_response:
+      properties:
+        error_code:
+          enum:
+          - CHANNEL_UNAVAILABLE
+          - OTP_DELIVERY_ERROR
+          type: string
+        message:
+          example: An internal server error occurred
+          type: string
+      type: object
+    publicSimulatePaymentByPaymentMethodId_request:
+      properties:
+        amount:
+          format: double
+          nullable: false
+          type: number
+      type: object
+    InternalEwallet_allOf:
+      properties:
+        linked_account_token_id:
+          nullable: true
+          type: string
+        linked_account_id:
+          nullable: true
+          type: string
+        access_token:
+          nullable: true
+          type: string
+      type: object
+      example: null
+    PublicDirectDebit_allOf:
+      properties:
+        type:
+          $ref: '#/components/schemas/DirectDebitType'
+        bank_account:
+          $ref: '#/components/schemas/DirectDebitBankAccount'
+        debit_card:
+          $ref: '#/components/schemas/DirectDebitDebitCard'
+      required:
+      - type
+      type: object
+      example: null
+    InternalDirectBankTransfer_allOf:
+      properties:
+        linked_token_id:
+          nullable: true
+          type: string
+      type: object
+      example: null
+    InternalOverTheCounter_allOf:
+      properties:
+        payment_code_id:
+          type: string
+      type: object
+      example: null
+    InternalVirtualAccount_allOf:
+      properties:
+        virtual_account_id:
+          type: string
+        alternative_displays:
+          items:
+            $ref: '#/components/schemas/VirtualAccountAlternativeDisplay'
+          type: array
+      type: object
+      example: null
+    InternalQRCode_allOf:
+      properties:
+        qr_code_id:
+          type: string
+      type: object
+      example: null
+    InternalPaymentMethod_allOf:
+      properties:
+        ewallet:
+          $ref: '#/components/schemas/InternalEwallet'
+        card:
+          $ref: '#/components/schemas/InternalCard'
+        cryptocurrency:
+          $ref: '#/components/schemas/InternalCrypto'
+        direct_bank_transfer:
+          $ref: '#/components/schemas/InternalDirectBankTransfer'
+        direct_debit:
+          $ref: '#/components/schemas/InternalDirectDebit'
+        over_the_counter:
+          $ref: '#/components/schemas/InternalOverTheCounter'
+        virtual_account:
+          $ref: '#/components/schemas/InternalVirtualAccount'
+        qr_code:
+          $ref: '#/components/schemas/InternalQRCode'
+        x-callback-url:
+          nullable: true
+          type: string
+        client_type:
+          nullable: true
+          type: string
+        internal_metadata:
+          nullable: true
+          type: object
+      type: object
+      example: null
+    InternalLATLinked_accounts_inner:
+      properties:
+        id:
+          type: string
+      required:
+      - id
+      type: object
+    ChannelResponse_errors_inner:
+      properties:
+        error_code:
+          type: string
+        message:
+          type: string
+      type: object
+    PublicPaymentMethod_allOf:
+      properties:
+        ewallet:
+          $ref: '#/components/schemas/PublicEwallet'
+        direct_debit:
+          $ref: '#/components/schemas/PublicDirectDebit'
+        over_the_counter:
+          $ref: '#/components/schemas/PublicOverTheCounter'
+        card:
+          $ref: '#/components/schemas/PublicCard'
+        cryptocurrency:
+          $ref: '#/components/schemas/PublicCrypto'
+        qr_code:
+          $ref: '#/components/schemas/PublicQRCode'
+      type: object
+      example: null
+    ChannelProperty_allOf:
+      description: Objects that enumerate the parameters needed as `channel_properties`
+        when creating a Payment Method
+      properties:
+        name:
+          description: The corresponding parameter name
+          type: string
+        type:
+          description: Data type of the parameter
+          type: string
+        is_required:
+          description: Indicates whether or not the parameter is required
+          type: boolean
+      type: object
+      example: null
+    ChannelAmountLimits_allOf:
+      description: Contains objects of the support currencies and its respective limits
+        per transaction
+      properties:
+        currency:
+          description: Currency supported by the payment channel
+          type: string
+        min_limit:
+          description: The minimum allowed transaction amount for the payment channel
+          type: number
+        max_limit:
+          description: The minimum allowed transaction amount for the payment channel
+          type: number
+      type: object
+      example: null
+    PublicPaymentChannel_allOf:
+      properties:
+        channel_code:
+          description: The specific Xendit code used to identify the partner channel
+          example: BPI
+          type: string
+        type:
+          description: The payment method type
+          example: DIRECT_DEBIT
+          type: string
+        country:
+          description: The country where the channel operates  in ISO 3166-2 country
+            code
+          example: PH
+          type: string
+        channel_name:
+          description: Official parter name of the payment channel
+          example: Bank of the Philippine Islands
+          type: string
+        channel_properties:
+          items:
+            $ref: '#/components/schemas/ChannelProperty'
+          type: array
+        logo_url:
+          description: "If available, this contains a URL to the logo of the partner\
+            \ channel"
+          type: string
+        amount_limits:
+          items:
+            $ref: '#/components/schemas/ChannelAmountLimits'
+          type: array
+      type: object
+      example: null
+    PublicPaymentChannelList_links_inner_allOf:
+      properties:
+        href:
+          description: Target URI that should contain a target to Internationalized
+            Resource Identifiers (IRI)
+          example: /v2/payment_methods/channels?is_activated=true
+          type: string
+        rel:
+          description: The link relation type described how the current context (source)
+            is related to target resource
+          enum:
+          - first
+          - last
+          - next
+          - prev
+          example: next
+          type: string
+        method:
+          description: The HTTP method to be used to call `href`
+          example: GET
+          type: string
+      type: object
+    PublicPaymentChannelList_links_inner:
+      allOf:
+      - $ref: '#/components/schemas/PublicPaymentChannelList_links_inner_allOf'
+    PublicPaymentChannelDowntimeOnlineData_allOf:
+      properties:
+        type:
+          description: Type of payment channel
+          example: DIRECT_DEBIT
+          type: string
+        channel_code:
+          description: Payment channel unique code
+          type: string
+        country:
+          description: Two letter country code of the payment channel
+          type: string
+        channel_name:
+          description: Name description of the payment channel
+          type: string
+        status:
+          description: Payment channel downtime status code (Only available when downtime
+            event)
+          enum:
+          - UNPLANNED_DOWNTIME
+          - SCHEDULED_MAINTENANCE
+          - DEGRADED_SERVICES
+          - PARTNER_UNPLANNED_DOWNTIME
+          - PARTNER_SCHEDULED_MAINTENANCE
+          - PARTNER_DEGRADED_SERVICES
+          - ONLINE
+          type: string
+      type: object
+      example: null
+    PublicPaymentChannelDowntimeOnline_allOf:
+      properties:
+        event:
+          description: Payment channel health event
+          example: payment_channel.health.downtime; payment_channel.health.online
+          type: string
+        business_id:
+          description: Business ID registered to payment channel downtime or online
+            callback URL
+          type: string
+        created:
+          description: Date time the event is triggered
+          example: 2023-02-15T20:44:14.284463+08:00
+          type: string
+        data:
+          $ref: '#/components/schemas/PublicPaymentChannelDowntimeOnlineData'
+      type: object
+      example: null

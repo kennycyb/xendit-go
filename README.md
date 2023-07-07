@@ -45,8 +45,11 @@ balance, _, err := xnd.BalancesApi.GetBalance(ctx).AccountType("CASH").Execute()
 
 Find detailed API infomration and examples for each of our product's by clicking the links below,
 
-* [Balance](docs/BalancesApi.md)
-* [Customer](docs/CustomersApi.md)
+* [Balance](docs/BalanceApi.md)
+* [Customer](docs/CustomerApi.md)
+* [Paymentmethod](docs/PaymentmethodApi.md)
+* [Paymentrequest](docs/PaymentrequestApi.md)
+* [Refund](docs/RefundApi.md)
 
 All URIs are relative to *https://api.xendit.co*.  For more information about our API, please refer to *https://developers.xendit.co/*.
 

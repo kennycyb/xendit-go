@@ -19,9 +19,6 @@ func (c contextKey) String() string {
 }
 
 var (
-	// ContextBasicAuth takes BasicAuth as authentication for the request.
-	ContextBasicAuth = contextKey("basic")
-
 	// ContextServerIndex uses a server configuration from the index.
 	ContextServerIndex = contextKey("serverIndex")
 
@@ -86,12 +83,8 @@ func NewConfiguration() *Configuration {
 		Debug:            false,
 		Servers:          ServerConfigurations{
 			{
-				URL: "https://api.xendit.co",
-				Description: "Xendit API",
-			},
-			{
-				URL: "https://api.stg.tidnex.dev",
-				Description: "Xendit API Staging",
+				URL: "",
+				Description: "No description provided",
 			},
 		},
 		OperationServers: map[string]ServerConfigurations{

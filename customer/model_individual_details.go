@@ -12,7 +12,10 @@ package customer
 
 import (
 	"encoding/json"
-	"github.com/kennycyb/xendit-go/utils"
+	
+	
+	utils "github.com/kennycyb/xendit-go/utils"
+	
 )
 
 // checks if the IndividualDetails type satisfies the MappedNullable interface at compile time

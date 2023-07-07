@@ -54,7 +54,7 @@ paths:
       - basicAuth: []
       summary: Get Balance
       tags:
-      - balances
+      - balance
 components:
   schemas:
     Balance:

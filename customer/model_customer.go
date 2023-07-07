@@ -12,7 +12,10 @@ package customer
 
 import (
 	"encoding/json"
-	"github.com/kennycyb/xendit-go/utils"
+	
+	
+	utils "github.com/kennycyb/xendit-go/utils"
+	
 )
 
 // checks if the Customer type satisfies the MappedNullable interface at compile time

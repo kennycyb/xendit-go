@@ -62,3 +62,12 @@ func (e GenericOpenAPIError) Body() []byte {
 func (e GenericOpenAPIError) Model() interface{} {
 	return e.model
 }
+
+// SetError update the error description
+func (e* GenericOpenAPIError) SetError(error string) {
+	e.error = error
+}
+
+func (e* GenericOpenAPIError) SetModel(model interface{}) {
+	e.model = model
+}
